@@ -1,5 +1,39 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  div.row
+    div.col-lg-12
+      div.input-group
+        div.input-group-btn
+          button.btn.btn-default.dropdown-toggle(data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") {{nameMethod}}
+            span.caret
+          ul.dropdown-menu
+            li(ng-repeat='method in methods')
+              a(ng-click='updateMethod(method)') {{method}}
+        input.form-control(type="text" placeholder="Enter your url here...")
+        div.input-group-btn
+          button.btn.btn-primary Send
+            span.glyphicon.glyphicon-send
+    div.col-lg-12.margin-separation-20
+      ul.nav.nav-tabs#options(role="tablist")
+        li.active
+          a(href='#' data-target="#headers" role="tab" data-toggle="tab" aria-controls="headers") Headers
+        li
+          a(href='#' data-target="#body" role="tab" data-toggle="tab" aria-controls="body") Body
+      div.tab-content.margin-separation-20
+        div.tab-pane.fade.in.active#headers(role="tabpanel")
+          div.row.margin-separation-10(ng-repeat='(index,header) in headers')
+            div.col-lg-5
+              input.form-control(type="text" ng-model="header.key" placeholder="key...")
+            div.col-lg-5
+              input.form-control(type="text" ng-model="header.value" placeholder="value...")
+            div.col-lg-2
+              button.btn.btn-default(ng-click='removeHeader(index)' ng-disabled='headers.length < 2')
+                span.glyphicon.glyphicon-minus
+          div.row.margin-separation-20
+            div.col-lg-12
+              button.btn.btn-default(ng-click="addHeader()")
+                span.glyphicon.glyphicon-plus
+        div.tab-pane.fade#body(role="tabpanel")
+          | here is the body
+

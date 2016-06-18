@@ -1,7 +1,30 @@
 doctype html
-html
+html(ng-app="restClient")
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/css/style.css')
+    link(rel='stylesheet', href='/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/css/simple-sidebar.css')
   body
-    block content
+    div#wrapper(ng-controller="MainController")
+      div#sidebar-wrapper
+        ul.sidebar-nav
+          li.sidebar-brand
+            | History
+
+      div#page-content-wrapper
+        div.container-fluid
+          div.row
+            div.col-lg-12
+              h2
+                button#menu-toggle.btn.btn-default
+                  span.glyphicon.glyphicon-chevron-left
+                | Rest Client
+          block content
+    script(src="/js/jquery.min.js")
+    script(src="/js/bootstrap.min.js")
+    script(src="/js/angular.min.js")
+    script(src="/app/app.js")
+    script(src="/app/controllers/mainController.js")
+    script(src="/js/index.js")
+

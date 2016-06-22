@@ -33,22 +33,16 @@ function checkXML(n)
 
 function validateXML(txt)
 {
+    var res = false;
 // code for IE
     if (window.ActiveXObject)
     {
         var xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
         xmlDoc.async=false;
-        xmlDoc.loadXML(document.all(txt).value);
-        if(xmlDoc.parseError.errorCode!=0)
+        xmlDoc.loadXML(txt);
+        if(xmlDoc.parseError.errorCode == 0)
         {
-            txt="Error Code: " + xmlDoc.parseError.errorCode + "\n";
-            txt=txt+"Error Reason: " + xmlDoc.parseError.reason;
-            txt=txt+"Error Line: " + xmlDoc.parseError.line;
-            alert(txt);
-        }
-        else
-        {
-            alert("No errors found");
+            res = true;
         }
     }
 // code for Mozilla, Firefox, Opera, etc.
@@ -56,27 +50,22 @@ function validateXML(txt)
     {
         try
         {
-            var text=document.getElementById(txt).value;
             var parser=new DOMParser();
-            var xmlDoc=parser.parseFromString(text,"application/xml");
+            var xmlDoc=parser.parseFromString(txt,"application/xml");
         }
         catch(err)
         {
-            alert(err.message)
+            console.log(err.message)
         }
 
-        if (xmlDoc.getElementsByTagName("parsererror").length>0)
+        if (xmlDoc.getElementsByTagName("parsererror").length <= 0)
         {
-            checkErrorXML(xmlDoc.getElementsByTagName("parsererror")[0]);
-            alert(xt)
-        }
-        else
-        {
-            alert("No errors found");
+            res = true;
         }
     }
     else
     {
-        alert('Your browser cannot handle XML validation');
+        toastr.info('Your browser cannot handle XML validation');
     }
+    return res;
 }

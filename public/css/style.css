@@ -10,3 +10,7 @@
 .margin-separation-5 {
     margin-top:5px;
 }
+
+textarea {
+    resize: vertical;
+}

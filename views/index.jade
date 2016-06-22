@@ -35,5 +35,12 @@ block content
               button.btn.btn-default(ng-click="addHeader()")
                 span.glyphicon.glyphicon-plus
         div.tab-pane.fade#body(role="tabpanel")
-          | here is the body
-
+          div.row.margin-separation-10
+          div.col-lg-3
+            select.form-control(ng-model="request.contentType" ng-change='controlBody(true)' ng-init="request.contentType = contentType[0]" ng-options="type as type for type in contentType")
+          div.col-lg-4
+            div.btn-group(role='group')
+              button.btn.btn-primary(ng-click='controlBody(true)' ng-disabled='request.contentType == "text/plain"') Verify
+              button.btn.btn-primary(ng-click='beautifyBody()' ng-disabled='request.contentType == "text/plain"') Beautify
+          div.col-lg-12.margin-separation-10.form-group(class='{{bodyClass}}')
+            textarea.form-control(placeholder="Write your body here..." ng-model="request.body")

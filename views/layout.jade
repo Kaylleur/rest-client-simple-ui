@@ -5,6 +5,8 @@ html(ng-app="restClient")
     link(rel='stylesheet', href='/css/style.css')
     link(rel='stylesheet', href='/css/bootstrap.min.css')
     link(rel='stylesheet', href='/css/simple-sidebar.css')
+    link(rel='stylesheet', href='/css/toastr.min.css')
+    link(rel='shortcut icon' href='/pictures/favicon.png')
   body
     div#wrapper(ng-controller="MainController")
       div#sidebar-wrapper
@@ -23,8 +25,12 @@ html(ng-app="restClient")
           block content
     script(src="/js/jquery.min.js")
     script(src="/js/bootstrap.min.js")
+    script(src="/js/xml.validator.js")
+    script(src="/js/validator.min.js")
+    script(src="/js/toastr.min.js")
     script(src="/js/angular.min.js")
+    script(src="/js/index.js")
     script(src="/app/app.js")
     script(src="/app/controllers/mainController.js")
-    script(src="/js/index.js")
+
 

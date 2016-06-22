@@ -3,6 +3,7 @@ extends layout
 block content
   div.row
     div.col-lg-12
+      h4 Request
       div.input-group
         div.input-group-btn
           button.btn.btn-default.dropdown-toggle(data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") {{nameMethod}}
@@ -10,25 +11,28 @@ block content
           ul.dropdown-menu
             li(ng-repeat='method in methods')
               a(ng-click='updateMethod(method)') {{method}}
-        input.form-control(type="text" placeholder="Enter your url here...")
+        input.form-control(type="text" ng-model='request.url' placeholder="Enter your url here...")
         div.input-group-btn
-          button.btn.btn-primary Send
+          button.btn.btn-primary(ng-click='send()') Send
             span.glyphicon.glyphicon-send
+  div.row
     div.col-lg-12.margin-separation-20
       ul.nav.nav-tabs#options(role="tablist")
         li.active
           a(href='#' data-target="#headers" role="tab" data-toggle="tab" aria-controls="headers") Headers
         li
           a(href='#' data-target="#body" role="tab" data-toggle="tab" aria-controls="body") Body
+        li
+          a(href='#' data-target="#params" role="tab" data-toggle="tab" aria-controls="Params") Params
       div.tab-content.margin-separation-20
         div.tab-pane.fade.in.active#headers(role="tabpanel")
-          div.row.margin-separation-10(ng-repeat='(index,header) in headers')
+          div.row.margin-separation-10(ng-repeat='(index,header) in request.headers')
             div.col-lg-5
               input.form-control(type="text" ng-model="header.key" placeholder="key...")
             div.col-lg-5
               input.form-control(type="text" ng-model="header.value" placeholder="value...")
             div.col-lg-2
-              button.btn.btn-default(ng-click='removeHeader(index)' ng-disabled='headers.length < 2')
+              button.btn.btn-default(ng-click='removeHeader(index)' ng-disabled='request.headers.length < 2')
                 span.glyphicon.glyphicon-minus
           div.row.margin-separation-20
             div.col-lg-12
@@ -37,10 +41,25 @@ block content
         div.tab-pane.fade#body(role="tabpanel")
           div.row.margin-separation-10
           div.col-lg-3
-            select.form-control(ng-model="request.contentType" ng-change='controlBody(true)' ng-init="request.contentType = contentType[0]" ng-options="type as type for type in contentType")
+            select.form-control(ng-model="bodyType" ng-change='controlBody(true)' ng-init="bodyType = contentType[0]" ng-options="type as type for type in contentType")
           div.col-lg-4
             div.btn-group(role='group')
-              button.btn.btn-primary(ng-click='controlBody(true)' ng-disabled='request.contentType == "text/plain"') Verify
-              button.btn.btn-primary(ng-click='beautifyBody()' ng-disabled='request.contentType == "text/plain"') Beautify
+              button.btn.btn-primary(ng-click='controlBody(true)' ng-disabled='bodyType == "text/plain"') Verify
+              button.btn.btn-primary(ng-click='beautifyBody()' ng-disabled='bodyType == "text/plain"') Beautify
           div.col-lg-12.margin-separation-10.form-group(class='{{bodyClass}}')
-            textarea.form-control(placeholder="Write your body here..." ng-model="request.body")
+            textarea.form-control(placeholder="Write your body here..." ng-model="request.data")
+        div.tab-pane.fade#params(role="tabpanel")
+  hr
+  div.row
+    div.col-lg-12.margin-separation-20
+      h4 Response
+      ul.nav.nav-tabs#response(role="tablist")
+        li.active
+          a(href='#' data-target="#responseHeaders" role="tab" data-toggle="tab" aria-controls="headers") Headers
+        li
+          a(href='#' data-target="#responseBody" role="tab" data-toggle="tab" aria-controls="body") Body
+      div.tab-content.margin-separation-20
+        div.tab-pane.fade.in.active#responseHeaders(role="tabpanel")
+        div.tab-pane.fade#responseBody(role="tabpanel")
+          div.row.margin-separation-10
+            pre.col-lg-12 {{response.data}}

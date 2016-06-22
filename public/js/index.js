@@ -14,6 +14,11 @@ $("#menu-toggle").click(function(e) {
         e.preventDefault()
         $(this).tab('show')
     });
+
+    $('#response a').click(function (e) {
+        e.preventDefault()
+        $(this).tab('show')
+    });
 });
 
 //toastr config
@@ -34,3 +39,43 @@ toastr.options = {
     "showMethod": "fadeIn",
     "hideMethod": "fadeOut"
 }
+
+//beautifier
+var beautifyXML = function(input){
+    var formatted = '';
+    var reg = /(>)(<)(\/*)/g;
+    input = input.replace(reg, '$1\r\n$2$3');
+    var pad = 0;
+    jQuery.each(input.split('\r\n'), function(index, node) {
+        var indent = 0;
+        if (node.match( /.+<\/\w[^>]*>$/ )) {
+            indent = 0;
+        } else if (node.match( /^<\/\w/ )) {
+            if (pad != 0) {
+                pad -= 1;
+            }
+        } else if (node.match( /^<\w[^>]*[^\/]>.*$/ )) {
+            indent = 1;
+        } else {
+            indent = 0;
+        }
+
+        var padding = '';
+        for (var i = 0; i < pad; i++) {
+            padding += '  ';
+        }
+
+        formatted += padding + node + '\r\n';
+        pad += indent;
+    });
+    return formatted;
+};
+
+var beautifyJSON = function(input){
+    var json = eval("(" + input + ")");
+    try {
+        return JSON.stringify(json, undefined, 3);
+    } catch (err) {
+        console.log(err.message);
+    }
+};

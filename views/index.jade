@@ -11,9 +11,9 @@ block content
           ul.dropdown-menu
             li(ng-repeat='method in methods')
               a(ng-click='updateMethod(method)') {{method}}
-        input.form-control(type="text" ng-model='request.url' placeholder="Enter your url here...")
+        input.form-control#url(type="text" ng-model='request.url' placeholder="Enter your url here...")
         div.input-group-btn
-          button.btn.btn-primary(ng-click='send()') Send
+          button.btn.btn-primary#btnSend(ng-click='send()' ) Send
             span.glyphicon.glyphicon-send
   div.row
     div.col-lg-12.margin-separation-20
@@ -53,13 +53,33 @@ block content
   div.row
     div.col-lg-12.margin-separation-20
       h4 Response
+        span.label.margin-left-5(ng-class='statusClass' ng-show='statusClass') {{response.status}}
       ul.nav.nav-tabs#response(role="tablist")
-        li.active
-          a(href='#' data-target="#responseHeaders" role="tab" data-toggle="tab" aria-controls="headers") Headers
         li
+          a(href='#' data-target="#responseHeaders" role="tab" data-toggle="tab" aria-controls="headers") Headers
+        li.active
           a(href='#' data-target="#responseBody" role="tab" data-toggle="tab" aria-controls="body") Body
       div.tab-content.margin-separation-20
-        div.tab-pane.fade.in.active#responseHeaders(role="tabpanel")
-        div.tab-pane.fade#responseBody(role="tabpanel")
+        div.tab-pane.fade#responseHeaders(role="tabpanel")
           div.row.margin-separation-10
-            pre.col-lg-12 {{response.data}}
+            div.col-lg-12
+              table.table.table-hover
+                thead
+                  tr
+                    th(style='width:50%') Key
+                    th Value
+                tbody
+                  tr(ng-repeat='(attr,value) in response.headers()')
+                    td {{attr}}
+                    td {{value}}
+        div.tab-pane.fade.in.active#responseBody(role="tabpanel")
+          div.row.margin-separation-10
+            div.col-lg-1
+              button.btn.btn-primary(ng-click='beautifyResponse(response)' ng-show='response') Beautify
+            div.col-lg-1
+              button.btn.btn-primary(ng-click='showPreview()' ng-show='response') {{btnPreview}}
+            div.col-lg-12.margin-separation-10(ng-hide='preview')
+             pre {{response.data}}
+            div.col-lg-12.margin-separation-10(ng-show='preview')
+              div.panel.panel-info
+                div.panel-body(ng-bind-html='response.data')

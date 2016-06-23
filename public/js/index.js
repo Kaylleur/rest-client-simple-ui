@@ -1,15 +1,4 @@
-$("#menu-toggle").click(function(e) {
-    e.preventDefault();
-    $("#wrapper").toggleClass("toggled");
-    var span = $(this).children('span');
-    if(span.hasClass('glyphicon-chevron-left')){
-        span.removeClass('glyphicon-chevron-left')
-            .addClass('glyphicon-chevron-right');
-    }else{
-        span.removeClass('glyphicon-chevron-right')
-            .addClass('glyphicon-chevron-left');
-    }
-
+$(document).ready(function(){
     $('#options a').click(function (e) {
         e.preventDefault()
         $(this).tab('show')
@@ -18,6 +7,23 @@ $("#menu-toggle").click(function(e) {
     $('#response a').click(function (e) {
         e.preventDefault()
         $(this).tab('show')
+    });
+
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+        var span = $(this).children('span');
+        if(span.hasClass('glyphicon-chevron-left')){
+            span.removeClass('glyphicon-chevron-left')
+                .addClass('glyphicon-chevron-right');
+        }else{
+            span.removeClass('glyphicon-chevron-right')
+                .addClass('glyphicon-chevron-left');
+        }
+    });
+
+    $('#url').keyup(function(e){
+       if(e.which == 13) $('#btnSend').click();
     });
 });
 
@@ -79,3 +85,16 @@ var beautifyJSON = function(input){
         console.log(err.message);
     }
 };
+
+function clone(obj) {
+    if (obj === null || typeof obj !== 'object') {
+        return obj;
+    }
+
+    var temp = obj.constructor(); // give temp the original obj's constructor
+    for (var key in obj) {
+        temp[key] = clone(obj[key]);
+    }
+
+    return temp;
+}

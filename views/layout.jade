@@ -13,6 +13,8 @@ html(ng-app="restClient")
         ul.sidebar-nav
           li.sidebar-brand
             | History
+          li(ng-repeat='history in histories track by $index')
+            | {{history.url}}
 
       div#page-content-wrapper
         div.container-fluid
@@ -29,8 +31,9 @@ html(ng-app="restClient")
     script(src="/js/validator.min.js")
     script(src="/js/toastr.min.js")
     script(src="/js/angular.min.js")
-    script(src="/js/index.js")
+    script(src="/js/angular-sanitize.min.js")
     script(src="/app/app.js")
     script(src="/app/controllers/mainController.js")
+    script(src="/js/index.js")
 
 

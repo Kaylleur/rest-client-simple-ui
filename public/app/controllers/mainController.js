@@ -1,14 +1,15 @@
 app.controller('MainController',
-['$scope','$http',function($scope,$http){
+['$scope','$http','$sanitize',function($scope,$http,$sanitize){
 
     $scope.nameMethod = 'GET '; //used to display  -> default
     $scope.methods =['GET','HEAD','POST','PUT','DELETE','TRACE','OPTIONS','CONNECT','PATCH'];
     $scope.contentType = ["JSON","XML","text/plain"];
-    $scope.history = [];
-
+    $scope.histories = [];
     $scope.request ={};
     $scope.request.method = 'GET';
     $scope.request.headers = [{}];
+    $scope.preview = false;
+    $scope.btnPreview = 'Preview';
 
     $scope.updateMethod = function(method){
         $scope.nameMethod = method + ' ';
@@ -17,12 +18,16 @@ app.controller('MainController',
 
     $scope.addHeader = function(){
         $scope.request.headers.push({});
-    }
+    };
 
     $scope.removeHeader = function(index){
         $scope.request.headers.splice(index,1);
-    }
+    };
 
+    $scope.showPreview = function(){
+        $scope.preview = !$scope.preview;
+        $scope.btnPreview = $scope.btnPreview == 'Preview' ? 'Text' : 'Preview';
+    }
 
     $scope.controlBody = function(withToast){
         var body = $scope.request.data;
@@ -30,12 +35,10 @@ app.controller('MainController',
         if(body) {
             switch ($scope.request.contentType) {
                 case "JSON" :
-                    if(validator.isJSON(body))res = true;
-                    else res = false;
+                    res = validator.isJSON(body);
                     break;
                 case "XML" :
-                    if(validateXML(body))res = true;
-                    else res = false;
+                    res = validateXML(body);
                     break;
                 case "text/plain":
                     break;
@@ -50,7 +53,7 @@ app.controller('MainController',
             if(withToast)toastr.error('Body not valid !')
         }
         return res;
-    }
+    };
 
     $scope.beautifyBody = function(){
         if($scope.controlBody(false)){
@@ -65,21 +68,34 @@ app.controller('MainController',
         }else{
             toastr.error('Your body is invalid can\'t beautify.');
         }
-    }
+    };
 
     $scope.send = function(){
-        $scope.history.push($scope.request);
-        $scope.request.headers.push({'Access-Control-Allow-Origin':'*'});
-        console.log($scope.request);
-        $http($scope.request)
-            .then(function(response){
-                //success
-                $scope.response = response;
-            },function(response){
-                //error
-                console.log(response);
-            })
-    }
+        $scope.histories.push(clone($scope.request));
+        try {
+            $http($scope.request)
+                .then(function(response){
+                    //success
+                    $scope.statusClass = 'label-success';
+                    $scope.response = response;
+                },function(response){
+                    //error
+                    $scope.statusClass = response.status < 500 ? 'label-warning' : 'label-danger';
+                    $scope.response = response;
+                })
+        }catch(err){
+            toastr.error('Error on the request !');
+            console.log(err);
+        }
 
+    };
+
+    $scope.beautifyResponse = function(response){
+        var contentType = response.headers()['content-type'].split(';');
+
+        if(contentType.includes('application/json'))$scope.response.data = beautifyJSON(JSON.stringify(response.data));
+        else if(contentType.includes('application/xml'))$scope.response.data = beautifyXML(response.data);
+        else toastr.info('Cannot detect type of response.');
+    };
 
 }]);

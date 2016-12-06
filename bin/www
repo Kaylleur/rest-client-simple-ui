@@ -87,4 +87,7 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
+  console.log('Server started correctly, listenning on ' + bind);
+  console.log('JSON input test on  http://localhost:' + bind +"/json");
+  console.log('XML input test  http://localhost:' + bind +"/xml");
 }

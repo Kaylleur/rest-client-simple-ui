@@ -27,7 +27,7 @@ app.controller('MainController',
     $scope.showPreview = function(){
         $scope.preview = !$scope.preview;
         $scope.btnPreview = $scope.btnPreview == 'Preview' ? 'Text' : 'Preview';
-    }
+    };
 
     $scope.controlBody = function(withToast){
         var body = $scope.request.data;
@@ -78,10 +78,11 @@ app.controller('MainController',
                     //success
                     $scope.statusClass = 'label-success';
                     $scope.response = response;
-                },function(response){
+                },function(err){
                     //error
-                    $scope.statusClass = response.status < 500 ? 'label-warning' : 'label-danger';
-                    $scope.response = response;
+                    $scope.statusClass = err.status < 500 ? 'label-warning' : 'label-danger';
+                    $scope.response = err;
+                    console.error(err);
                 })
         }catch(err){
             toastr.error('Error on the request !');
@@ -93,8 +94,8 @@ app.controller('MainController',
     $scope.beautifyResponse = function(response){
         var contentType = response.headers()['content-type'].split(';');
 
-        if(contentType.includes('application/json'))$scope.response.data = beautifyJSON(JSON.stringify(response.data));
-        else if(contentType.includes('application/xml'))$scope.response.data = beautifyXML(response.data);
+        if(contentType.indexOf('application/json')!=-1)$scope.response.data = beautifyJSON(JSON.stringify(response.data));
+        else if(contentType.indexOf('application/xml')!=-1)$scope.response.data = beautifyXML(response.data);
         else toastr.info('Cannot detect type of response.');
     };
 
